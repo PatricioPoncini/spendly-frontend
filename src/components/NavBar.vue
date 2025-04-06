@@ -1,7 +1,7 @@
 <template>
   <nav class="bg-white border-gray-200">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-      <a href="#" class="flex items-center space-x-1 rtl:space-x-reverse">
+      <a href="/" class="flex items-center space-x-1 rtl:space-x-reverse">
         <img src="/spendly_logo.png" class="h-10" alt="Flowbite Logo" />
         <span class="self-center text-2xl font-semibold whitespace-nowrap">Spendly</span>
       </a>
@@ -53,6 +53,13 @@
               href="#"
               class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
               >Contact</a
+            >
+          </li>
+          <li>
+            <a
+              href="/login"
+              class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
+              >Login</a
             >
           </li>
         </ul>
