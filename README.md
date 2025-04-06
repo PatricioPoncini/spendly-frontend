@@ -1,6 +1,6 @@
 # `Spendly Frontend`
 
-A backend for a daily expense management system for users.
+A frontend for a daily expense management system for users.
 
 ## `💻 Stack`
 [![Stack](https://skillicons.dev/icons?i=ts,bun,vue,tailwindcss,html,css)](https://skillicons.dev)
