@@ -1,79 +1,43 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { WalletIcon, AtSignIcon, LockIcon, EyeIcon, EyeOffIcon } from 'lucide-vue-next'
 import { useUserStore } from '@/stores/user.store'
-import { toast } from 'vue3-toastify'
+import { WalletIcon, AtSignIcon, LockIcon, EyeIcon, EyeOffIcon } from 'lucide-vue-next'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { toast } from 'vue3-toastify'
 
 const userStore = useUserStore()
 const router = useRouter()
 const showPassword = ref(false)
 
 const form = reactive({
-  firstName: '',
-  lastName: '',
   userName: '',
   password: '',
 })
 
 const handleSubmit = async () => {
-  await userStore.register(form)
+  await userStore.login(form)
 
-  toast.success('Account created successfully!')
-
-  clearForm()
+  toast.success('Login successfully!')
 
   setTimeout(() => {
-    router.push('/login')
+    router.push('/dashboard')
   }, 2000)
-}
-
-const clearForm = () => {
-  form.firstName = ''
-  form.lastName = ''
-  form.userName = ''
-  form.password = ''
 }
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+  <div class="pt-10 flex items-center justify-center bg-gray-50 p-4">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md z-50 relative">
       <div class="p-6 border-b text-center">
         <div class="flex justify-center items-center mb-2">
           <wallet-icon class="h-8 w-8 text-emerald-600" />
           <h1 class="text-2xl font-bold ml-2">Spendly</h1>
         </div>
-        <p class="text-gray-500">Create your account</p>
+        <p class="text-gray-500">Login into your account</p>
       </div>
 
       <form @submit.prevent="handleSubmit" class="p-6">
         <div class="grid gap-6">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="space-y-2">
-              <label for="firstName" class="text-sm font-medium"> First Name </label>
-              <input
-                id="firstName"
-                v-model="form.firstName"
-                type="text"
-                placeholder="John"
-                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                required
-              />
-            </div>
-            <div class="space-y-2">
-              <label for="lastName" class="text-sm font-medium"> Last Name </label>
-              <input
-                id="lastName"
-                v-model="form.lastName"
-                type="text"
-                placeholder="Doe"
-                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                required
-              />
-            </div>
-          </div>
-
           <div class="space-y-2">
             <label for="username" class="text-sm font-medium"> Username </label>
             <div class="relative">
@@ -89,7 +53,6 @@ const clearForm = () => {
                 required
               />
             </div>
-            <p class="text-xs text-gray-500">This will be your unique identifier on Spendly</p>
           </div>
 
           <div class="space-y-2">
@@ -116,22 +79,14 @@ const clearForm = () => {
                 <eye-off-icon v-else class="h-4 w-4 text-gray-400" />
               </button>
             </div>
-            <p class="text-xs text-gray-500">Must be at least 8 characters</p>
           </div>
 
           <button
             type="submit"
             class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
           >
-            Create Account
+            Login
           </button>
-
-          <div class="text-sm text-center text-gray-500">
-            Already have an account?
-            <router-link to="/login" class="font-medium text-emerald-600 hover:underline">
-              Sign in
-            </router-link>
-          </div>
         </div>
       </form>
     </div>
