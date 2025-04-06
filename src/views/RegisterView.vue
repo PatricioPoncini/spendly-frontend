@@ -24,7 +24,7 @@ const handleSubmit = async () => {
   clearForm()
 
   setTimeout(() => {
-    router.push('/')
+    router.push('/login')
   }, 2000)
 }
 

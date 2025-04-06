@@ -20,7 +20,7 @@ const handleSubmit = async () => {
   toast.success('Login successfully!')
 
   setTimeout(() => {
-    router.push('/')
+    router.push('/dashboard')
   }, 2000)
 }
 </script>
