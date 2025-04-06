@@ -38,8 +38,6 @@ const clearForm = () => {
 
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-    <div class="fixed inset-0 bg-opacity-50 z-40"></div>
-
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md z-50 relative">
       <div class="p-6 border-b text-center">
         <div class="flex justify-center items-center mb-2">
