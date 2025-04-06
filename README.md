@@ -26,7 +26,7 @@ VITE_BACKEND_URL=
 ```
 
 ## `🚀 Run the server`
-Run the backend server:
+Run the frontend server:
 ```sh
 bun run dev
 ```
