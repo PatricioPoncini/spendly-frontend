@@ -23,9 +23,7 @@ export const backendApi = {
     return await backend.post('/users/register', data)
   },
   async loginUser(data: LoginUser) {
-    const response = await backend.post<{ token: string }>('/users/login', data)
-    localStorage.setItem('authToken', response.data.token)
-    return response
+    return await backend.post<{ token: string }>('/users/login', data)
   },
   async bringExpenses() {
     return await backend.get<Expense[]>('/expense')

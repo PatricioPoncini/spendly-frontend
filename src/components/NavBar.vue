@@ -1,3 +1,20 @@
+<script setup lang="ts">
+import { useAuthStore } from '@/stores/auth.store'
+import { useRouter } from 'vue-router'
+
+const auth = useAuthStore()
+const router = useRouter()
+
+function handleClick() {
+  if (auth.isLoggedIn) {
+    auth.logout()
+    router.push('/login')
+  } else {
+    router.push('/login')
+  }
+}
+</script>
+
 <template>
   <nav class="bg-white border-gray-200">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -56,11 +73,12 @@
             >
           </li>
           <li>
-            <a
-              href="/login"
-              class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
-              >Login</a
+            <button
+              @click="handleClick"
+              class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-green-700 md:p-0"
             >
+              {{ auth.isLoggedIn ? 'Logout' : 'Login' }}
+            </button>
           </li>
         </ul>
       </div>
