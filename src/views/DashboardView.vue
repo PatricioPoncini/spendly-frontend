@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user.store'
 import { onMounted, ref } from 'vue'
+import LoadingView from '@/components/LoadingView.vue'
 
 const totalAmount = ref(0)
 const mostUsedCategory = ref('')
 const userStore = useUserStore()
+const isLoading = ref(true)
 
 onMounted(async () => {
   await userStore.bringExpenses()
@@ -19,16 +21,23 @@ onMounted(async () => {
     categoryCount[title] = (categoryCount[title] || 0) + 1
   })
 
-  const [mostUsed] = Object.entries(categoryCount).reduce((a, b) => {
-    return a[1] > b[1] ? a : b
-  })
+  const entries = Object.entries(categoryCount)
+  if (entries.length > 0) {
+    const [mostUsed] = entries.reduce((a, b) => {
+      return a[1] > b[1] ? a : b
+    })
+    mostUsedCategory.value = mostUsed
+  } else {
+    mostUsedCategory.value = 'None yet'
+  }
 
-  mostUsedCategory.value = mostUsed
+  isLoading.value = false
 })
 </script>
 
 <template>
-  <div class="flex flex-row gap-20 min-h-screen">
+  <LoadingView v-if="isLoading" />
+  <div v-else class="flex flex-row gap-20 min-h-screen">
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="grid grid-cols-3 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow p-6">
@@ -59,6 +68,16 @@ onMounted(async () => {
         </div>
       </div>
 
+      <div class="flex justify-end mb-6">
+        <router-link to="/new-expense">
+          <button
+            class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg shadow"
+          >
+            + Add Expense
+          </button>
+        </router-link>
+      </div>
+
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -80,6 +99,7 @@ onMounted(async () => {
             </tr>
           </tbody>
         </table>
+        <p class="text-center p-4 text-gray-500">No expenses yet</p>
       </div>
     </main>
   </div>
