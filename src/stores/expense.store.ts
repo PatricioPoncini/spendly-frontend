@@ -10,7 +10,7 @@ export interface ExpenseStore {
 
 export const useExpenseStore = defineStore('expense', {
   state: (): ExpenseStore => ({
-    expenses: []
+    expenses: [],
   }),
   actions: {
     async bringExpenses() {
@@ -25,13 +25,13 @@ export const useExpenseStore = defineStore('expense', {
     },
     async saveNewExpense(expense: SaveNewExpenseRequest) {
       try {
-        await backendApi.saveNewExpense(expense);
-        toast.success("Expense saved successfully")
+        await backendApi.saveNewExpense(expense)
+        toast.success('Expense saved successfully')
       } catch (error) {
         const { message } = handleAxiosError(error)
         toast.error(message)
         throw error
       }
-    }
-  }
+    },
+  },
 })

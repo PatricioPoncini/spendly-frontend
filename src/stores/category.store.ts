@@ -5,23 +5,23 @@ import { toast } from 'vue3-toastify'
 import { backendApi } from '@/services/back.api.ts'
 
 export interface CategoryStore {
-  categories: Category[];
+  categories: Category[]
 }
 
 export const useCategoryStore = defineStore('category', {
   state: (): CategoryStore => ({
-    categories: []
+    categories: [],
   }),
   actions: {
     async bringCategories() {
       try {
-        const response = await backendApi.bringCategories();
-        this.categories = response.data;
+        const response = await backendApi.bringCategories()
+        this.categories = response.data
       } catch (error) {
         const { message } = handleAxiosError(error)
         toast.error(message)
         throw error
       }
-    }
-  }
-});
+    },
+  },
+})

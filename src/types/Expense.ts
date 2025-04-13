@@ -13,7 +13,7 @@ export interface Expense {
 }
 
 export interface SaveNewExpenseRequest {
-  description: string;
-  amount: number;
-  categoryId: number;
+  description: string
+  amount: number
+  categoryId: string
 }

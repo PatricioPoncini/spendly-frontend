@@ -7,7 +7,7 @@ import { useExpenseStore } from '@/stores/expense.store.ts'
 
 const totalAmount = ref(0)
 const mostUsedCategory = ref('')
-const expenseStore = useExpenseStore();
+const expenseStore = useExpenseStore()
 const isLoading = ref(true)
 
 onMounted(async () => {
@@ -101,7 +101,9 @@ onMounted(async () => {
             </tr>
           </tbody>
         </table>
-        <p v-if="expenseStore.expenses.length === 0" class="text-center p-4 text-gray-500">No expenses yet</p>
+        <p v-if="expenseStore.expenses.length === 0" class="text-center p-4 text-gray-500">
+          No expenses yet
+        </p>
       </div>
     </main>
   </div>
