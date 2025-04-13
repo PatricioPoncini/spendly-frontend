@@ -13,9 +13,9 @@ export const useExpenseStore = defineStore('expense', {
     expenses: [],
   }),
   actions: {
-    async bringExpenses() {
+    async bringExpensesByMonth(month: number) {
       try {
-        const response = await backendApi.bringExpenses()
+        const response = await backendApi.bringExpensesByMonth(month)
         this.expenses = response.data
       } catch (error) {
         const { message } = handleAxiosError(error)
