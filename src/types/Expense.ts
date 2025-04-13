@@ -11,3 +11,9 @@ export interface Expense {
     logo: string
   }
 }
+
+export interface SaveNewExpenseRequest {
+  description: string
+  amount: number
+  categoryId: string
+}
