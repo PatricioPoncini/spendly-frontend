@@ -26,8 +26,8 @@ export const backendApi = {
   async loginUser(data: LoginUser) {
     return await backend.post<{ token: string }>('/users/login', data)
   },
-  async bringExpenses() {
-    return await backend.get<Expense[]>('/expense')
+  async bringExpensesByMonth(month: number) {
+    return await backend.get<Expense[]>(`/expense/byMonth/${month}`)
   },
   async bringCategories() {
     return await backend.get<Category[]>('/category')
