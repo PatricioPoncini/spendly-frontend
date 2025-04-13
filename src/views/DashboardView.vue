@@ -1,22 +1,24 @@
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user.store'
 import { onMounted, ref } from 'vue'
 import LoadingView from '@/components/LoadingView.vue'
+import { useExpenseStore } from '@/stores/expense.store.ts'
+
+// TODO: El total de gastos debe ser mensual, no total desde que se registró el usuario
 
 const totalAmount = ref(0)
 const mostUsedCategory = ref('')
-const userStore = useUserStore()
+const expenseStore = useExpenseStore();
 const isLoading = ref(true)
 
 onMounted(async () => {
-  await userStore.bringExpenses()
-  totalAmount.value = userStore.expenses
+  await expenseStore.bringExpenses()
+  totalAmount.value = expenseStore.expenses
     .map((expense) => parseFloat(expense.amount))
     .reduce((acc, amount) => acc + amount, 0)
 
   const categoryCount: Record<string, number> = {}
 
-  userStore.expenses.forEach((expense) => {
+  expenseStore.expenses.forEach((expense) => {
     const title = expense.category.title
     categoryCount[title] = (categoryCount[title] || 0) + 1
   })
@@ -63,7 +65,7 @@ onMounted(async () => {
             <h2 class="text-lg font-medium text-gray-700">Recent Activity</h2>
             <calendar-icon class="h-6 w-6 text-emerald-600" />
           </div>
-          <p class="text-3xl font-bold text-gray-900">{{ userStore.expenses.length }}</p>
+          <p class="text-3xl font-bold text-gray-900">{{ expenseStore.expenses.length }}</p>
           <p class="text-sm text-gray-500 mt-2">Expenses recorded this month</p>
         </div>
       </div>
@@ -88,7 +90,7 @@ onMounted(async () => {
               <th scope="col" class="px-6 py-3">Created At</th>
             </tr>
           </thead>
-          <tbody v-for="expense in userStore.expenses" :key="expense.id">
+          <tbody v-for="expense in expenseStore.expenses" :key="expense.id">
             <tr class="odd:bg-white even:bg-gray-50 border-b border-gray-200">
               <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                 {{ expense.description }}
@@ -99,7 +101,7 @@ onMounted(async () => {
             </tr>
           </tbody>
         </table>
-        <p class="text-center p-4 text-gray-500">No expenses yet</p>
+        <p v-if="expenseStore.expenses.length === 0" class="text-center p-4 text-gray-500">No expenses yet</p>
       </div>
     </main>
   </div>
