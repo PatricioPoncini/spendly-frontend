@@ -66,7 +66,7 @@ watch(selectedMonth, async () => {
 <template>
   <LoadingView v-if="isLoading" />
   <div v-else class="flex flex-row gap-20 min-h-screen">
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="grid grid-cols-3 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow p-6">
           <div class="flex items-center justify-between mb-4">
@@ -162,7 +162,7 @@ watch(selectedMonth, async () => {
       </div>
 
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+        <table class="table-fixed w-full text-sm text-left rtl:text-right text-gray-500">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
               <th scope="col" class="px-6 py-3">Description</th>
@@ -173,7 +173,7 @@ watch(selectedMonth, async () => {
           </thead>
           <tbody v-for="expense in expenseStore.expenses" :key="expense.id">
             <tr class="odd:bg-white even:bg-gray-50 border-b border-gray-200">
-              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+              <th scope="row" class="px-6 py-4 font-medium text-gray-900 truncate">
                 {{ expense.description }}
               </th>
               <td class="px-6 py-4">{{ parseFloat(expense.amount) }} $</td>
