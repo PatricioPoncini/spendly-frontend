@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import type { SaveNewExpenseRequest } from '@/types/Expense.ts'
 import { useCategoryStore } from '@/stores/category.store.ts'
 import { useExpenseStore } from '@/stores/expense.store.ts'
@@ -13,7 +13,9 @@ const newExpense = ref<SaveNewExpenseRequest>({
   categoryId: '',
   amount: 0,
   description: '',
+  spentAt: '',
 })
+const selectedDate = ref<string>('')
 const selectedCategoryId = ref<string | null>(null)
 const router = useRouter()
 const isLoading = ref(true)
@@ -21,6 +23,9 @@ const isSuccess = ref(false)
 
 onMounted(async () => {
   await categoryStore.bringCategories()
+  const today = new Date()
+  selectedDate.value = today.toISOString().split('T')[0]
+  newExpense.value.spentAt = today.toISOString()
   isLoading.value = false
 })
 
@@ -48,6 +53,13 @@ const handleSubmit = async () => {
     router.push('/dashboard')
   }, 2000)
 }
+
+watch(selectedDate, (newVal) => {
+  if (newVal) {
+    const date = new Date(newVal)
+    newExpense.value.spentAt = date.toISOString()
+  }
+})
 </script>
 
 <template>
@@ -183,7 +195,20 @@ const handleSubmit = async () => {
             </div>
           </div>
 
-          <div class="pt-4">
+          <div class="space-y-2">
+            <label for="spentAt" class="block text-sm font-medium text-gray-700">Spent at</label>
+            <div class="relative">
+              <input
+                type="date"
+                id="spentAt"
+                v-model="selectedDate"
+                class="block w-full rounded-lg border border-gray-300 shadow-sm p-3 text-gray-700"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="space-y-2">
             <button
               type="submit"
               :disabled="isSuccess"

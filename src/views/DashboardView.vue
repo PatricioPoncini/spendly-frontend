@@ -168,7 +168,7 @@ watch(selectedMonth, async () => {
               <th scope="col" class="px-6 py-3">Description</th>
               <th scope="col" class="px-6 py-3">Amount</th>
               <th scope="col" class="px-6 py-3">Category</th>
-              <th scope="col" class="px-6 py-3">Created At</th>
+              <th scope="col" class="px-6 py-3">Spent At</th>
             </tr>
           </thead>
           <tbody v-for="expense in expenseStore.expenses" :key="expense.id">
@@ -178,7 +178,7 @@ watch(selectedMonth, async () => {
               </th>
               <td class="px-6 py-4">{{ parseFloat(expense.amount) }} $</td>
               <td class="px-6 py-4">{{ expense.category.title }}</td>
-              <td class="px-6 py-4">{{ expense.createdAt.split('T')[0] }}</td>
+              <td class="px-6 py-4">{{ expense.spentAt.split('T')[0] }}</td>
             </tr>
           </tbody>
         </table>
