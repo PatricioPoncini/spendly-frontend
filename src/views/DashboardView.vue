@@ -3,8 +3,6 @@ import { onMounted, ref, watch } from 'vue'
 import LoadingView from '@/components/LoadingView.vue'
 import { useExpenseStore } from '@/stores/expense.store.ts'
 
-// TODO: El total de gastos debe ser mensual, no total desde que se registró el usuario
-
 const totalAmount = ref(0)
 const mostUsedCategory = ref('')
 const expenseStore = useExpenseStore()
