@@ -4,10 +4,12 @@ import { handleAxiosError } from '@/utils/error'
 import { defineStore } from 'pinia'
 import { toast } from 'vue3-toastify'
 import { useAuthStore } from './auth.store'
+import type { Expense } from '@/types/Expense.ts'
 
 export interface UserStore {
   userName: string
   userJWT: string
+  expenses: Expense[]
 }
 
 export const useUserStore = defineStore('user', {
@@ -30,7 +32,7 @@ export const useUserStore = defineStore('user', {
       try {
         const response = await backendApi.loginUser(data)
         const auth = useAuthStore()
-        auth.login(response.data.token)
+        auth.login(response.data.accessToken)
       } catch (error) {
         const { message } = handleAxiosError(error)
         toast.error(message)
