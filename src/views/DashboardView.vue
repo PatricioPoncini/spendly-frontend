@@ -63,15 +63,15 @@ watch(selectedMonth, async () => {
 
 <template>
   <LoadingView v-if="isLoading" />
-  <div v-else class="flex flex-row gap-20 min-h-screen">
-    <main class="w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="grid grid-cols-3 gap-6 mb-8">
+  <div v-else class="flex flex-col gap-8 min-h-screen px-4 py-6 sm:px-6 lg:px-8">
+    <main class="w-full max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow p-6">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-medium text-gray-700">Total Expenses</h2>
             <dollar-sign-icon class="h-6 w-6 text-emerald-600" />
           </div>
-          <p class="text-3xl font-bold text-gray-900">{{ totalAmount }} $</p>
+          <p class="text-3xl font-bold text-gray-900">$ {{ totalAmount }}</p>
         </div>
 
         <div class="bg-white rounded-lg shadow p-6">
@@ -79,9 +79,7 @@ watch(selectedMonth, async () => {
             <h2 class="text-lg font-medium text-gray-700">Main Category</h2>
             <tag-icon class="h-6 w-6 text-emerald-600" />
           </div>
-          <p class="text-3xl font-bold text-gray-900">
-            {{ mostUsedCategory }}
-          </p>
+          <p class="text-3xl font-bold text-gray-900">{{ mostUsedCategory }}</p>
         </div>
 
         <div class="bg-white rounded-lg shadow p-6">
@@ -94,57 +92,48 @@ watch(selectedMonth, async () => {
         </div>
       </div>
 
-      <div class="relative">
-        <div class="absolute flex justify-starts mb-6">
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="text-gray-500"
-              >
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                <line x1="16" y1="2" x2="16" y2="6" />
-                <line x1="8" y1="2" x2="8" y2="6" />
-                <line x1="3" y1="10" x2="21" y2="10" />
-              </svg>
-            </div>
-
-            <select
-              id="category"
-              v-model="selectedMonth"
-              class="pl-10 block w-full rounded-lg border border-gray-300 shadow-sm p-3 text-gray-700 appearance-none"
-              required
+      <div class="mb-6">
+        <label class="block mb-2 text-sm font-medium text-gray-700">Select Month</label>
+        <div class="relative w-full sm:w-1/2 md:w-1/3">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="text-gray-500"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
             >
-              <option disabled value="">Select category</option>
-              <option v-for="month in months" :key="month.id" :value="month.id">
-                {{ month.name }}
-              </option>
-            </select>
-
-            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="text-gray-500"
-              >
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </div>
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+          </div>
+          <select
+            id="category"
+            v-model="selectedMonth"
+            class="pl-10 block w-full rounded-lg border border-gray-300 shadow-sm p-3 text-gray-700 appearance-none"
+            required
+          >
+            <option disabled value="">Select category</option>
+            <option v-for="month in months" :key="month.id" :value="month.id">
+              {{ month.name }}
+            </option>
+          </select>
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="text-gray-500"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
           </div>
         </div>
       </div>
@@ -159,8 +148,9 @@ watch(selectedMonth, async () => {
         </router-link>
       </div>
 
-      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="table-fixed w-full text-sm text-left rtl:text-right text-gray-500">
+      <!-- Table only for PC -->
+      <div class="hidden sm:block relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="min-w-full text-sm text-left rtl:text-right text-gray-500 whitespace-nowrap">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
               <th scope="col" class="px-6 py-3">Description</th>
@@ -171,15 +161,40 @@ watch(selectedMonth, async () => {
           </thead>
           <tbody v-for="expense in expenseStore.expenses" :key="expense.id">
             <tr class="odd:bg-white even:bg-gray-50 border-b border-gray-200">
-              <th scope="row" class="px-6 py-4 font-medium text-gray-900 truncate">
+              <td class="px-6 py-4 font-medium text-gray-900 truncate">
                 {{ expense.description }}
-              </th>
-              <td class="px-6 py-4">{{ parseFloat(expense.amount) }} $</td>
+              </td>
+              <td class="px-6 py-4">$ {{ parseFloat(expense.amount) }}</td>
               <td class="px-6 py-4">{{ expense.category.title }}</td>
               <td class="px-6 py-4">{{ expense.spentAt.split('T')[0] }}</td>
             </tr>
           </tbody>
         </table>
+        <p v-if="expenseStore.expenses.length === 0" class="text-center p-4 text-gray-500">
+          No expenses yet
+        </p>
+      </div>
+
+      <!-- Cards only for mobile -->
+      <div class="block sm:hidden space-y-4">
+        <div
+          v-for="expense in expenseStore.expenses"
+          :key="expense.id"
+          class="bg-white rounded-lg shadow p-4 border border-gray-200"
+        >
+          <p class="text-sm text-gray-700 mb-1">
+            <span class="font-semibold">Description:</span> {{ expense.description }}
+          </p>
+          <p class="text-sm text-gray-700 mb-1">
+            <span class="font-semibold">Amount:</span> $ {{ parseFloat(expense.amount) }}
+          </p>
+          <p class="text-sm text-gray-700 mb-1">
+            <span class="font-semibold">Category:</span> {{ expense.category.title }}
+          </p>
+          <p class="text-sm text-gray-700">
+            <span class="font-semibold">Spent At:</span> {{ expense.spentAt.split('T')[0] }}
+          </p>
+        </div>
         <p v-if="expenseStore.expenses.length === 0" class="text-center p-4 text-gray-500">
           No expenses yet
         </p>

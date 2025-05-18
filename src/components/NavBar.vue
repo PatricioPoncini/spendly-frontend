@@ -66,12 +66,12 @@ const redirectToLogin = async () => {
             >
           </li>
           <li>
-            <button
+            <a
               @click="redirectToLogin"
-              class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-green-700 md:p-0"
+              class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
             >
               {{ auth.isLoggedIn ? 'Logout' : 'Login' }}
-            </button>
+            </a>
           </li>
         </ul>
       </div>
