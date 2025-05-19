@@ -2,6 +2,7 @@
 import { onMounted, ref, watch } from 'vue'
 import LoadingView from '@/components/LoadingView.vue'
 import { useExpenseStore } from '@/stores/expense.store.ts'
+import { DollarSignIcon, Tag, Calendar } from 'lucide-vue-next'
 
 const totalAmount = ref(0)
 const mostUsedCategory = ref('')
@@ -66,29 +67,50 @@ watch(selectedMonth, async () => {
   <div v-else class="flex flex-col gap-8 min-h-screen px-4 py-6 sm:px-6 lg:px-8">
     <main class="w-full max-w-7xl mx-auto">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-medium text-gray-700">Total Expenses</h2>
-            <dollar-sign-icon class="h-6 w-6 text-emerald-600" />
+        <div
+          class="bg-white rounded-xl shadow-md hover:shadow-lg border border-gray-100 overflow-hidden"
+        >
+          <div class="p-6 relative">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-semibold text-gray-800">Total Expenses</h2>
+              <div class="bg-emerald-100 rounded-full p-2.5">
+                <DollarSignIcon class="h-5 w-5 text-emerald-600" />
+              </div>
+            </div>
+
+            <p class="text-3xl font-bold text-gray-900">$ {{ totalAmount }}</p>
           </div>
-          <p class="text-3xl font-bold text-gray-900">$ {{ totalAmount }}</p>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-medium text-gray-700">Main Category</h2>
-            <tag-icon class="h-6 w-6 text-emerald-600" />
+        <div
+          class="bg-white rounded-xl shadow-md hover:shadow-lg border border-gray-100 overflow-hidden"
+        >
+          <div class="p-6 relative">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-semibold text-gray-800">Main Category</h2>
+              <div class="bg-emerald-100 rounded-full p-2.5">
+                <Tag class="h-5 w-5 text-emerald-600" />
+              </div>
+            </div>
+
+            <p class="text-3xl font-bold text-gray-900">{{ mostUsedCategory }}</p>
           </div>
-          <p class="text-3xl font-bold text-gray-900">{{ mostUsedCategory }}</p>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-medium text-gray-700">Recent Activity</h2>
-            <calendar-icon class="h-6 w-6 text-emerald-600" />
+        <div
+          class="bg-white rounded-xl shadow-md hover:shadow-lg border border-gray-100 overflow-hidden"
+        >
+          <div class="p-6 relative">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-semibold text-gray-800">Recent Activity</h2>
+              <div class="bg-emerald-100 rounded-full p-2.5">
+                <Calendar class="h-5 w-5 text-emerald-600" />
+              </div>
+            </div>
+
+            <p class="text-3xl font-bold text-gray-900">{{ expenseStore.expenses.length }}</p>
+            <p class="text-sm text-gray-500 mt-2">Expenses recorded this month</p>
           </div>
-          <p class="text-3xl font-bold text-gray-900">{{ expenseStore.expenses.length }}</p>
-          <p class="text-sm text-gray-500 mt-2">Expenses recorded this month</p>
         </div>
       </div>
 
