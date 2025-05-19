@@ -65,109 +65,66 @@ watch(selectedDate, (newVal) => {
 <template>
   <LoadingView v-if="isLoading" />
   <div v-else class="min-h-screen flex items-center justify-center px-4 py-12">
-    <div class="w-full max-w-xl shadow-xl rounded-2xl p-8 space-y-6">
+    <div class="flex flex-col items-center w-full max-w-xl shadow-xl rounded-2xl p-8 space-y-6">
       <h2 class="text-3xl font-bold text-gray-800 text-center">Add New Expense</h2>
-      <div class="p-6 md:p-8">
-        <form @submit.prevent="handleSubmit" class="space-y-6">
-          <div class="space-y-2">
-            <label for="amount" class="block text-sm font-medium text-gray-700">Amount</label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="text-gray-500"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
-                  <path d="M12 18V6" />
-                </svg>
-              </div>
+      <div class="bg-white rounded-xl w-full max-w-md z-50 relative">
+        <form @submit.prevent="handleSubmit" class="p-6">
+          <div class="grid gap-6">
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-gray-700 flex items-center">
+                Amount
+                <span class="text-red-500 ml-1">*</span>
+              </label>
               <input
-                v-model="newExpense.amount"
                 type="number"
-                id="amount"
-                class="pl-10 block w-full rounded-lg border border-gray-300 shadow-sm p-3 text-gray-700"
-                placeholder="0.00"
-                required
+                v-model="newExpense.amount"
+                min="0"
                 step="0.01"
+                placeholder="0.00"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                required
+              />
+              <p class="text-sm text-gray-500">{{ formattedAmount }}</p>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-gray-700 flex items-center">
+                Description
+                <span class="text-red-500 ml-1">*</span>
+              </label>
+              <input
+                type="text"
+                v-model="newExpense.description"
+                placeholder="e.g., Grocery shopping"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                required
               />
             </div>
-            <div class="relative">
-              <div class="absolute right-0 text-right text-lg font-semibold text-emerald-700">
-                {{ formattedAmount }} USD
-              </div>
-            </div>
-          </div>
 
-          <div class="space-y-2">
-            <label for="description" class="block text-sm font-medium text-gray-700"
-              >Description</label
-            >
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="text-gray-500"
-                >
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                </svg>
-              </div>
-              <textarea
-                v-model="newExpense.description"
-                id="description"
-                rows="1"
-                class="pl-10 block w-full rounded-lg border border-gray-300 shadow-sm p-3 text-gray-700"
-                placeholder="What was this expense for?"
-              ></textarea>
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-gray-700 flex items-center">
+                Date
+                <span class="text-red-500 ml-1">*</span>
+              </label>
+              <input
+                type="date"
+                v-model="selectedDate"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                required
+              />
             </div>
-          </div>
 
-          <div class="space-y-2">
-            <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="text-gray-500"
-                >
-                  <path d="M20 14V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7" />
-                  <path d="M12 14v7" />
-                  <path d="M8 21h8" />
-                  <path d="M2 14h20" />
-                </svg>
-              </div>
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-gray-700 flex items-center">
+                Category
+                <span class="text-red-500 ml-1">*</span>
+              </label>
               <select
-                id="category"
                 v-model="selectedCategoryId"
-                class="pl-10 block w-full rounded-lg border border-gray-300 shadow-sm p-3 text-gray-700 appearance-none"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 required
               >
-                <option disabled value="">Select category</option>
+                <option disabled value="">Select a category</option>
                 <option
                   v-for="category in categoryStore.categories"
                   :key="category.id"
@@ -176,63 +133,36 @@ watch(selectedDate, (newVal) => {
                   {{ category.title }}
                 </option>
               </select>
-              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            </div>
+
+            <button
+              :disabled="isSuccess"
+              type="submit"
+              class="font-semibold w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            >
+              <span v-if="!isSuccess">Save Expense</span>
+              <div
+                class="flex items-center justify-center pointer-events-none"
+                role="status"
+                v-else
+              >
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  class="w-6 h-6 text-gray-200 animate-spin fill-green-800"
+                  viewBox="0 0 100 101"
                   fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="text-gray-500"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path d="m6 9 6 6 6-6" />
+                  <path
+                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                    fill="currentFill"
+                  />
                 </svg>
               </div>
-            </div>
-          </div>
-
-          <div class="space-y-2">
-            <label for="spentAt" class="block text-sm font-medium text-gray-700">Spent at</label>
-            <div class="relative">
-              <input
-                type="date"
-                id="spentAt"
-                v-model="selectedDate"
-                class="block w-full rounded-lg border border-gray-300 shadow-sm p-3 text-gray-700"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="space-y-2">
-            <button
-              type="submit"
-              :disabled="isSuccess"
-              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] disabled:opacity-70 disabled:hover:translate-y-0 flex items-center justify-center"
-            >
-              <template v-if="isSuccess">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="mr-2"
-                >
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                  <polyline points="22 4 12 14.01 9 11.01" />
-                </svg>
-                Expense Saved!
-              </template>
-              <template v-else> Save Expense </template>
             </button>
           </div>
         </form>
