@@ -11,6 +11,7 @@ const mostUsedCategory = ref('')
 const expenseStore = useExpenseStore()
 const isLoading = ref(true)
 const selectedMonth = ref<number>(0)
+const hasChartData = computed(() => chartSeries.value.length > 0)
 
 const chartSeries = computed(() => {
   const categoryTotals: Record<string, number> = {}
@@ -43,6 +44,10 @@ const chartLabels = computed(() => {
     }
   })
 
+  if (Object.keys(categoryTotals).length === 0) {
+    return ['No data yet']
+  }
+
   return Object.keys(categoryTotals)
 })
 
@@ -51,15 +56,18 @@ const chartOptions = computed(() => ({
     type: 'donut',
   },
   labels: chartLabels.value,
-  title: {
+  colors: hasChartData.value
+    ? ['#3D8D7A', '#A3D1C6', '#537D5D', '#328E6E', '#6A9C89', '#16423C']
+    : ['#84939c'],
+  noData: {
+    text: 'No data yet',
     align: 'center',
+    verticalAlign: 'middle',
     style: {
-      fontSize: '16px',
-      fontWeight: 'bold',
-      color: '#263238',
+      color: '#9e9e9e',
+      fontSize: '14px',
     },
   },
-  colors: ['#3D8D7A', '#A3D1C6', '#537D5D', '#328E6E', '#6A9C89', '#16423C'],
   legend: {
     position: 'bottom',
   },
@@ -304,7 +312,8 @@ watch(selectedMonth, async () => {
                 class="bg-white rounded-lg shadow p-4 border border-gray-200"
               >
                 <p class="text-sm text-gray-700 mb-1">
-                  <span class="font-semibold">Description:</span> {{ truncateText(expense.description, 15) }}
+                  <span class="font-semibold">Description:</span>
+                  {{ truncateText(expense.description, 15) }}
                 </p>
                 <p class="text-sm text-gray-700 mb-1">
                   <span class="font-semibold">Amount:</span> $ {{ parseFloat(expense.amount) }}
