@@ -171,6 +171,7 @@ watch(selectedMonth, async () => {
       </div>
 
       <!-- Table only for PC -->
+      <h1 class="text-xl font-semibold font-">All expenses</h1>
       <div class="hidden sm:block relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="min-w-full text-sm text-left rtl:text-right text-gray-500 whitespace-nowrap">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50">
