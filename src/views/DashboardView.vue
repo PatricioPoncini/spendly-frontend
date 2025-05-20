@@ -1,14 +1,89 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import LoadingView from '@/components/LoadingView.vue'
 import { useExpenseStore } from '@/stores/expense.store.ts'
 import { DollarSignIcon, Tag, Calendar } from 'lucide-vue-next'
+import VueApexCharts from 'vue3-apexcharts'
+import { truncateText } from '@/utils/format.ts'
 
 const totalAmount = ref(0)
 const mostUsedCategory = ref('')
 const expenseStore = useExpenseStore()
 const isLoading = ref(true)
 const selectedMonth = ref<number>(0)
+
+const chartSeries = computed(() => {
+  const categoryTotals: Record<string, number> = {}
+
+  expenseStore.expenses.forEach((expense) => {
+    const category = expense.category.title
+    const amount = parseFloat(expense.amount)
+
+    if (categoryTotals[category]) {
+      categoryTotals[category] += amount
+    } else {
+      categoryTotals[category] = amount
+    }
+  })
+
+  return Object.values(categoryTotals)
+})
+
+const chartLabels = computed(() => {
+  const categoryTotals: Record<string, number> = {}
+
+  expenseStore.expenses.forEach((expense) => {
+    const category = expense.category.title
+    const amount = parseFloat(expense.amount)
+
+    if (categoryTotals[category]) {
+      categoryTotals[category] += amount
+    } else {
+      categoryTotals[category] = amount
+    }
+  })
+
+  return Object.keys(categoryTotals)
+})
+
+const chartOptions = computed(() => ({
+  chart: {
+    type: 'donut',
+  },
+  labels: chartLabels.value,
+  title: {
+    align: 'center',
+    style: {
+      fontSize: '16px',
+      fontWeight: 'bold',
+      color: '#263238',
+    },
+  },
+  colors: ['#3D8D7A', '#A3D1C6', '#537D5D', '#328E6E', '#6A9C89', '#16423C'],
+  legend: {
+    position: 'bottom',
+  },
+  responsive: [
+    {
+      breakpoint: 480,
+      options: {
+        chart: {
+          width: 300,
+        },
+        legend: {
+          position: 'bottom',
+        },
+      },
+    },
+  ],
+  tooltip: {
+    y: {
+      formatter: function (value: number) {
+        return '$' + value.toFixed(2)
+      },
+    },
+  },
+}))
 
 const months = [
   { id: 1, name: 'January' },
@@ -66,6 +141,7 @@ watch(selectedMonth, async () => {
   <LoadingView v-if="isLoading" />
   <div v-else class="flex flex-col gap-8 min-h-screen px-4 py-6 sm:px-6 lg:px-8">
     <main class="w-full max-w-7xl mx-auto">
+      <h1 class="text-2xl font-bold text-gray-800 mb-6">Expense Dashboard</h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <div
           class="bg-white rounded-xl shadow-md hover:shadow-lg border border-gray-100 overflow-hidden"
@@ -170,57 +246,82 @@ watch(selectedMonth, async () => {
         </router-link>
       </div>
 
-      <!-- Table only for PC -->
-      <h1 class="text-xl font-semibold font-">All expenses</h1>
-      <div class="hidden sm:block relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="min-w-full text-sm text-left rtl:text-right text-gray-500 whitespace-nowrap">
-          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-            <tr>
-              <th scope="col" class="px-6 py-3">Description</th>
-              <th scope="col" class="px-6 py-3">Amount</th>
-              <th scope="col" class="px-6 py-3">Category</th>
-              <th scope="col" class="px-6 py-3">Spent At</th>
-            </tr>
-          </thead>
-          <tbody v-for="expense in expenseStore.expenses" :key="expense.id">
-            <tr class="odd:bg-white even:bg-gray-50 border-b border-gray-200">
-              <td class="px-6 py-4 font-medium text-gray-900 truncate">
-                {{ expense.description }}
-              </td>
-              <td class="px-6 py-4">$ {{ parseFloat(expense.amount) }}</td>
-              <td class="px-6 py-4">{{ expense.category.title }}</td>
-              <td class="px-6 py-4">{{ expense.spentAt.split('T')[0] }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <p v-if="expenseStore.expenses.length === 0" class="text-center p-4 text-gray-500">
-          No expenses yet
-        </p>
-      </div>
-
-      <!-- Cards only for mobile -->
-      <div class="block sm:hidden space-y-4">
-        <div
-          v-for="expense in expenseStore.expenses"
-          :key="expense.id"
-          class="bg-white rounded-lg shadow p-4 border border-gray-200"
-        >
-          <p class="text-sm text-gray-700 mb-1">
-            <span class="font-semibold">Description:</span> {{ expense.description }}
-          </p>
-          <p class="text-sm text-gray-700 mb-1">
-            <span class="font-semibold">Amount:</span> $ {{ parseFloat(expense.amount) }}
-          </p>
-          <p class="text-sm text-gray-700 mb-1">
-            <span class="font-semibold">Category:</span> {{ expense.category.title }}
-          </p>
-          <p class="text-sm text-gray-700">
-            <span class="font-semibold">Spent At:</span> {{ expense.spentAt.split('T')[0] }}
-          </p>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-xl shadow-md p-6 h-full">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Expenses by Category</h2>
+            <div class="h-80">
+              <VueApexCharts
+                type="donut"
+                height="100%"
+                :options="chartOptions"
+                :series="chartSeries"
+              />
+            </div>
+          </div>
         </div>
-        <p v-if="expenseStore.expenses.length === 0" class="text-center p-4 text-gray-500">
-          No expenses yet
-        </p>
+
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-xl shadow-md p-6 h-full">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">All Expenses</h2>
+
+            <div class="hidden sm:block relative overflow-x-auto w-full max-h-96 overflow-y-auto">
+              <table
+                class="min-w-full text-sm text-left rtl:text-right text-gray-500 whitespace-nowrap"
+              >
+                <thead class="sticky top-0 bg-gray-50 text-xs text-gray-700 uppercase">
+                  <tr>
+                    <th scope="col" class="px-6 py-3">Description</th>
+                    <th scope="col" class="px-6 py-3">Amount</th>
+                    <th scope="col" class="px-6 py-3">Category</th>
+                    <th scope="col" class="px-6 py-3">Spent At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="expense in expenseStore.expenses"
+                    :key="expense.id"
+                    class="odd:bg-white even:bg-gray-50 border-b border-gray-200"
+                  >
+                    <td class="px-6 py-4 font-medium text-gray-900">
+                      {{ truncateText(expense.description, 20) }}
+                    </td>
+                    <td class="px-6 py-4">$ {{ parseFloat(expense.amount) }}</td>
+                    <td class="px-6 py-4">{{ expense.category.title }}</td>
+                    <td class="px-6 py-4">{{ expense.spentAt.split('T')[0] }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p v-if="expenseStore.expenses.length === 0" class="text-center p-4 text-gray-500">
+                No expenses yet
+              </p>
+            </div>
+
+            <div class="block sm:hidden space-y-4">
+              <div
+                v-for="expense in expenseStore.expenses"
+                :key="expense.id"
+                class="bg-white rounded-lg shadow p-4 border border-gray-200"
+              >
+                <p class="text-sm text-gray-700 mb-1">
+                  <span class="font-semibold">Description:</span> {{ truncateText(expense.description, 15) }}
+                </p>
+                <p class="text-sm text-gray-700 mb-1">
+                  <span class="font-semibold">Amount:</span> $ {{ parseFloat(expense.amount) }}
+                </p>
+                <p class="text-sm text-gray-700 mb-1">
+                  <span class="font-semibold">Category:</span> {{ expense.category.title }}
+                </p>
+                <p class="text-sm text-gray-700">
+                  <span class="font-semibold">Spent At:</span> {{ expense.spentAt.split('T')[0] }}
+                </p>
+              </div>
+              <p v-if="expenseStore.expenses.length === 0" class="text-center p-4 text-gray-500">
+                No expenses yet
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   </div>
