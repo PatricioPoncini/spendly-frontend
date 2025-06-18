@@ -16,14 +16,18 @@ const form = reactive({
 })
 
 const handleSubmit = async () => {
-  isLoading.value = true
-  await userStore.login(form)
+  try {
+    isLoading.value = true
+    await userStore.login(form)
 
-  toast.success('Login successfully!')
+    toast.success('Login successfully!')
 
-  setTimeout(() => {
-    router.push('/dashboard')
-  }, 2000)
+    setTimeout(() => {
+      router.push('/dashboard')
+    }, 2000)
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>
 
