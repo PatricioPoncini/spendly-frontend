@@ -30,7 +30,7 @@ const redirectToLogin = async () => {
 
 const redirectToRegister = async () => {
   closeMenu()
-    await router.push('/register')
+  await router.push('/register')
 }
 
 const isActive = (path: string) => {
