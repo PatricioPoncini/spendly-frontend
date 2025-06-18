@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth.store'
 import { useRouter, useRoute } from 'vue-router'
-import { Menu, X, User, Home, Info } from 'lucide-vue-next'
+import { Menu, X, User, Home, Info, UserPlus } from 'lucide-vue-next'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -28,11 +28,15 @@ const redirectToLogin = async () => {
   }
 }
 
+const redirectToRegister = async () => {
+  closeMenu()
+    await router.push('/register')
+}
+
 const isActive = (path: string) => {
   return route.path === path
 }
 
-// Close menu when window resizes to desktop
 const handleResize = () => {
   if (window.innerWidth >= 768) {
     isMenuOpen.value = false
@@ -102,6 +106,18 @@ onMounted(() => {
               <div class="flex items-center gap-1.5">
                 <Info class="w-4 h-4" />
                 <span>About</span>
+              </div>
+            </a>
+          </li>
+
+          <li v-if="!auth.isLoggedIn">
+            <a
+              @click="redirectToRegister"
+              class="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-green-700 cursor-pointer"
+            >
+              <div class="flex items-center gap-1.5">
+                <UserPlus class="w-4 h-4" />
+                <span>Join now</span>
               </div>
             </a>
           </li>
